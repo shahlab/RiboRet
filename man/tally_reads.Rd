@@ -16,5 +16,6 @@ A single data frame with counts per position per read length for all samples
 }
 \description{
 This function counts the number of reads with 3' ends at a given position and
-separates them by read lengths. This function defaults to using 4 threads.
+separates them by read lengths. This function defaults to using 4 threads. IT
+CURRENTLY ONLY CONSIDERS POSITIVE STRAND READS.
 }

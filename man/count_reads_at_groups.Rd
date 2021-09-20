@@ -7,7 +7,8 @@
 count_reads_at_groups(bamList, gRangesToLookFor)
 }
 \arguments{
-\item{bamList}{A list of bams produced by parallel_read_bams}
+\item{bamList}{A list of bams produced by parallel_read_bams, or one cleaned
+of contaminating reads by remove_contam_reads.}
 
 \item{gRangesToLookFor}{a GRanges object. Reads corresponding to the ranges
 in this object will be found from each of the bam files}
