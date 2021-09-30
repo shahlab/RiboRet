@@ -9,16 +9,15 @@
 #' @returns A single data frame with counts per position per read length for all samples
 #' @export
 #'
-tally_reads <- function(bamList, offset){
+tally_reads <- function(bamList, offset, ncores = 4){
   parallel::mclapply(bamList, function(bam){      # for each bam
-    bam |>                                       #
-      tibble::as_tibble() |>                     # convert to df
-      dplyr::filter(strand == "+") |>            # only get + strand
-      dplyr::group_by(end, qwidth) |>            # for each end and read length
+    bam |>                                        #
+      tibble::as_tibble() |>                      # convert to df
+      dplyr::mutate(position = ifelse(strand == "+", end - offset, start + offset)) |>
+      dplyr::group_by(strand, qwidth, position) |>            # for each end and read length
       dplyr::tally() |>                          # count reads that occur there
       dplyr::ungroup() |>                        #
-      dplyr::rename(position = end) |>           # rename end to position
-      dplyr::mutate(position = position - offset) # find the designated ribosome site
-  }, mc.cores = 4) |>                            #
+      dplyr::mutate(rpm = n*1e6/sum(n))
+  }, mc.cores = ncores) |>                        # number of cores
     dplyr::bind_rows(.id = "sample")              # combine to one df
 }
