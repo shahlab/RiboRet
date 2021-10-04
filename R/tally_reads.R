@@ -12,7 +12,7 @@ tally_reads <- function(bamList, offset, ncores){
   parallel::mclapply(bamList, function(bam){        # for each bam
     bam |>                                          #
       tibble::as_tibble() |>                        # convert to df
-      dplyr::left_join(., offset, by = "qwidth") |> # join the offset data frame
+      dplyr::left_join(offset, by = "qwidth") |>    # join the offset data frame
       dplyr::mutate(position = ifelse(strand == "+", end - offset, start + offset)) |>
       dplyr::group_by(strand, qwidth, position) |>  # for each end and read length
       dplyr::tally() |>                             # count reads that occur there
