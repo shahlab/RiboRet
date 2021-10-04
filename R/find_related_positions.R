@@ -29,10 +29,12 @@ find_related_positions <- function(bamDf, maxDiff, gffLoc){
   # a new col that will find the diff between a row and prev row
   downshifted.row <- c(NA, unique.pos.df$position[1:(nrow(unique.pos.df) - 1)])
 
-  # find the differences
+  # find the differences, currently this excludes the very first and very last
+  # places where reads map because they end up as NA
   bam.with.downshited.col <- unique.pos.df |>
     dplyr::mutate(pos2 = downshifted.row,
-                  difference = position - pos2)
+                  difference = position - pos2) |>
+    filter(!is.na(difference))
 
   # define some variables for the loop
   unified.group.list <- list()
